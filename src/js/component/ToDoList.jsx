@@ -1,30 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Item from "./Item.jsx";
 
 // useState to initialize the to-do list
 
 const ToDoList = () => {
-  const [toDoList, setTodos] = useState([
-    { id: 1, name: "clean", completed: false },
-    { id: 2, name: "dance", completed: false },
-    { id: 3, name: "work", completed: false },
+  const [todos, setTodos] = useState([
+    // { id: 1, name: "clean", completed: false },
+    // { id: 2, name: "walk the dog", completed: false },
+    // { id: 3, name: "work", completed: false },
   ]);
 
+  useEffect(() => {
+    fetch("https://assets.breatheco.de/apis/fake/todos/user/mara")
+      .then((response) => response.json())
+      .then((data) => setTodos([...data]));
+  }, []);
+
   // function for the delete button onClick using filter
-  function deleteTask(i) {
-let filtered = toDoList.filter((todo, index) => {
-  return index !== i
-})
-    fetch("http://assets.breatheco.de/apis/fake/todos/user/mara", {
-      method: "POST",
-      body: JSON.stringify(toDoList),
+  function deleteTodo(i) {
+    let filtered = todos.filter((todo, index) => {
+      return index !== i;
+    });
+    fetch("https://assets.breatheco.de/apis/fake/todos/user/mara", {
+      method: "PUT",
+      body: JSON.stringify(filtered),
       headers: { "Content-Type": "application/json" },
     })
       .then((response) => {
         return response.json();
       })
       .then((data) => {
-        setTodos([...filtered])
+        setTodos([...filtered]);
       })
       .catch((error) => {
         console.log(error);
@@ -32,16 +38,16 @@ let filtered = toDoList.filter((todo, index) => {
   }
 
   function deleteAll(i) {
-    fetch("http://assets.breatheco.de/apis/fake/todos/user/mara", {
+    fetch("https://assets.breatheco.de/apis/fake/todos/user/mara", {
       method: "DELETE",
-      body: JSON.stringify(toDoList),
+      body: JSON.stringify(todos),
       headers: { "Content-Type": "application/json" },
     })
       .then((response) => {
         return response.json();
       })
       .then((data) => {
-        setTodos([])
+        setTodos([]);
       })
       .catch((error) => {
         console.log(error);
@@ -52,21 +58,22 @@ let filtered = toDoList.filter((todo, index) => {
   function addItem(event) {
     event.preventDefault();
     let task = {
-      id: Math.floor(Date.now() / 1000),
-      name: event.target.toDo.value,
-      completed: false,
+      label: event.target.toDo.value,
+      done: false,
     };
+    todos.push(task);
+    console.log(todos);
 
-    fetch("http://assets.breatheco.de/apis/fake/todos/user/mara", {
+    fetch("https://assets.breatheco.de/apis/fake/todos/user/mara", {
       method: "PUT",
-      body: JSON.stringify(toDoList),
+      body: JSON.stringify(todos),
       headers: { "Content-Type": "application/json" },
     })
       .then((response) => {
         return response.json();
       })
       .then((data) => {
-        setTodos([...toDoList, task]);
+        setTodos([...todos]);
         event.target.toDo.value = "";
       })
       .catch((error) => {
@@ -87,7 +94,7 @@ let filtered = toDoList.filter((todo, index) => {
               type="text"
               name="toDo"
               placeholder={
-                toDoList[0]
+                todos[0]
                   ? "What else needs to be done?"
                   : "No tasks. Add a task."
               }
@@ -97,14 +104,16 @@ let filtered = toDoList.filter((todo, index) => {
 
         {/* list of to-do items */}
         <ul>
-          {toDoList.map((todo, i) => {
-            return <Item i={i} todo={todo} deleteTask={deleteTask} />;
-
+          {todos.map((todo, i) => {
+            return <Item key={i} todo={todo} deleteTodo={deleteTodo} />;
           })}
 
           <div className="counter">
-            <p>{`${toDoList.length}` + " items left"}</p>
-            <button type="button" onClick={() => deleteAll()}> Delete All</button>
+            <p>{`${todos.length}` + " items left"}</p>
+            <button type="button" onClick={() => deleteAll()}>
+              {" "}
+              Delete All
+            </button>
           </div>
         </ul>
       </div>

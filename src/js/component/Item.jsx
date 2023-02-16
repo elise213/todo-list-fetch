@@ -19,11 +19,11 @@ const Item = (props) => {
         // hide or show delete button
       >
         <div className="content">
-          <p>{props.todo.name}</p>
+          <p>{props.todo.label}</p>
           
           {show && <button
             className={show ? "d-block" : "d-none"}
-            onClick={() => props.deleteTask(props.i)}
+            onClick={() => props.deleteTodo(props.i)}
           >
             X
           </button> }
