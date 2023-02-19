@@ -11,7 +11,7 @@ const ToDoList = () => {
   ]);
 
   useEffect(() => {
-    fetch("https://assets.breatheco.de/apis/fake/todos/user/mara")
+    fetch("https://assets.breatheco.de/apis/fake/todos/user/mara2")
       .then((response) => response.json())
       .then((data) => setTodos([...data]));
   }, []);
@@ -21,7 +21,7 @@ const ToDoList = () => {
     let filtered = todos.filter((todo, index) => {
       return index !== i;
     });
-    fetch("https://assets.breatheco.de/apis/fake/todos/user/mara", {
+    fetch("https://assets.breatheco.de/apis/fake/todos/user/mara2", {
       method: "PUT",
       body: JSON.stringify(filtered),
       headers: { "Content-Type": "application/json" },
@@ -39,7 +39,7 @@ const ToDoList = () => {
 
   // function for the delete-all button onClick
   function deleteAll(i) {
-    fetch("https://assets.breatheco.de/apis/fake/todos/user/mara", {
+    fetch("https://assets.breatheco.de/apis/fake/todos/user/mara2", {
       method: "DELETE",
       body: JSON.stringify(todos),
       headers: { "Content-Type": "application/json" },
@@ -72,7 +72,7 @@ const ToDoList = () => {
 
   useEffect(() => {
     console.log("todos has been updated");
-    fetch("https://assets.breatheco.de/apis/fake/todos/user/mara", {
+    fetch("https://assets.breatheco.de/apis/fake/todos/user/mara2", {
       method: "PUT",
       body: JSON.stringify(todos),
       headers: { "Content-Type": "application/json" },
