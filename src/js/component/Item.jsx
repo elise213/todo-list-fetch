@@ -5,25 +5,28 @@ const Item = (props) => {
   const [show, setShow] = useState(false);
 
   return (
+
+    // hide or show delete button
     <div  onMouseEnter={() => {
-        console.log("mouse over!")
+        // console.log("mouse over!")
         setShow(true)}
     }
     onMouseLeave={() => {
-        console.log("mouse out!")
+        // console.log("mouse out!")
         setShow(false)}
     }>
+      {/* line-item containing the to-do */}
       <li
-        key={props.i}
+        key={props.index}
         className="toDoItem"
-        // hide or show delete button
       >
         <div className="content">
           <p>{props.todo.label}</p>
           
+          {/* the delete button */}
           {show && <button
             className={show ? "d-block" : "d-none"}
-            onClick={() => props.deleteTodo(props.i)}
+            onClick={() => props.deleteTodo(props.index)}
           >
             X
           </button> }

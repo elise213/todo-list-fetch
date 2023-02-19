@@ -30,13 +30,14 @@ const ToDoList = () => {
         return response.json();
       })
       .then((data) => {
-        setTodos([...filtered]);
+        setTodos(filtered);
       })
       .catch((error) => {
         console.log(error);
       });
   }
 
+  // function for the delete-all button onClick
   function deleteAll(i) {
     fetch("https://assets.breatheco.de/apis/fake/todos/user/mara", {
       method: "DELETE",
@@ -61,9 +62,16 @@ const ToDoList = () => {
       label: event.target.toDo.value,
       done: false,
     };
-    todos.push(task);
+    setTodos([...todos, task]);
+    // todos.push(task);.... this doesn't update the backend.
     console.log(todos);
+    // ...maybe change this to useState
 
+    
+  }
+
+  useEffect(() => {
+    console.log("todos has been updated");
     fetch("https://assets.breatheco.de/apis/fake/todos/user/mara", {
       method: "PUT",
       body: JSON.stringify(todos),
@@ -73,13 +81,14 @@ const ToDoList = () => {
         return response.json();
       })
       .then((data) => {
-        setTodos([...todos]);
-        event.target.toDo.value = "";
+        // setTodos([...data]);
+        // this was todos, but needed to be data. 
+        console.log(data)
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  }, [todos])
 
   // what the component returns
   return (
@@ -87,6 +96,7 @@ const ToDoList = () => {
       <h1>To-do</h1>
 
       <div className="toDoWrapper">
+
         {/* input form for new to-do items */}
         <div className="input">
           <form onSubmit={addItem}>
@@ -96,7 +106,7 @@ const ToDoList = () => {
               placeholder={
                 todos[0]
                   ? "What else needs to be done?"
-                  : "No tasks. Add a task."
+                  : "Nothing to do! Add a task."
               }
             />
           </form>
@@ -105,11 +115,14 @@ const ToDoList = () => {
         {/* list of to-do items */}
         <ul>
           {todos.map((todo, i) => {
-            return <Item key={i} todo={todo} deleteTodo={deleteTodo} />;
+            return <Item index={i} todo={todo} deleteTodo={deleteTodo} />;
           })}
 
+          {/* how many todos you have left */}
           <div className="counter">
             <p>{`${todos.length}` + " items left"}</p>
+
+            {/* button to delete all todos */}
             <button type="button" onClick={() => deleteAll()}>
               {" "}
               Delete All
