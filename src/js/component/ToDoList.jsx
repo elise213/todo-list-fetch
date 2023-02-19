@@ -10,6 +10,8 @@ const ToDoList = () => {
     // { id: 3, name: "work", completed: false },
   ]);
 
+  const [text, setText] = useState("");
+
   useEffect(() => {
     fetch("https://assets.breatheco.de/apis/fake/todos/user/mara2")
       .then((response) => response.json())
@@ -40,7 +42,7 @@ const ToDoList = () => {
   // function for the delete-all button onClick
   function deleteAll(i) {
     fetch("https://assets.breatheco.de/apis/fake/todos/user/mara2", {
-      method: "DELETE",
+      method: "PUT",
       body: JSON.stringify(todos),
       headers: { "Content-Type": "application/json" },
     })
@@ -64,10 +66,9 @@ const ToDoList = () => {
     };
     setTodos([...todos, task]);
     // todos.push(task);.... this doesn't update the backend.
+    setText("");
     console.log(todos);
     // ...maybe change this to useState
-
-    
   }
 
   useEffect(() => {
@@ -101,6 +102,8 @@ const ToDoList = () => {
         <div className="input">
           <form onSubmit={addItem}>
             <input
+            onChange={(e) => setText(e.target.value)}
+            value ={text}
               type="text"
               name="toDo"
               placeholder={
